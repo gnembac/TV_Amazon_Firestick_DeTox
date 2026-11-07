@@ -1,4 +1,4 @@
-# NIEMALS deaktivieren (Teilstring-Treffer wird von 02_detox.sh übersprungen)
+# NEVER disable (substring match; 02_detox.sh skips any package containing one of these)
 com.android.systemui
 com.android.settings
 com.amazon.tv.settings

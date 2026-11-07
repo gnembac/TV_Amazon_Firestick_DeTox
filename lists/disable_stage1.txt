@@ -1,14 +1,15 @@
-# Stufe 1: auf einem AFTKRT (Fire OS 8.1.8.5) stabil deaktiviert, Sprachsuche/Prime/YouTube/Music liefen weiter.
-# Immer erst prüfen, ob das Paket installiert ist. Nutzer-Apps nur bei Nichtnutzung.
+# Stage 1 + 3: packages that were stable to disable on an AFTKRT (Fire OS 8.1.8.5).
+# Voice search, Prime Video, Music and YouTube kept working. Always check that a package is installed first.
+# User-facing apps only if you do not use them.
 
-# Nutzer-Apps / Mediatheken (nur wenn ungenutzt)
+# User apps / media libraries (only if unused)
 com.netflix.ninja
 com.zdf.android.mediathek
 de.swr.ard.avp.mobile.android.amazon
 tv.arte.plus7
 com.amazon.spotify.mediabrowserservice
 
-# Werbung / Shopping / Promo
+# Ads / shopping / promo
 com.amazon.minitv.android.app
 com.amazon.shoptv.client
 com.amazon.shoptv.firetv.client
@@ -20,7 +21,7 @@ com.amazon.tv.releasenotes
 com.amazon.storm.lightning.tutorial
 com.amazon.tmm.tutorial
 
-# Tracking / Telemetrie (Verdachtsgruppe, falls Alexa nach Kaltstart hängt: zuerst diese zurückholen)
+# Tracking / telemetry group (suspect group: if voice search hangs after a cold boot, re-enable these first)
 com.amazon.tv.acr
 com.amazon.hybridadidservice
 com.amazon.device.telemetry.emitter
@@ -30,7 +31,7 @@ com.amazon.perfc
 com.amazon.dp.logger
 com.amazon.neo.minerva.logcat
 
-# Stufe 3: ebenfalls stabil (Werbe-Bildschirmschoner, Rechtliches, leere Platzhalter-Apps)
+# Also stable: ad-supported screensaver, legal notices, empty placeholder ("dummy") apps
 com.amazon.ftv.screensaver
 com.amazon.tv.ftvambient
 com.amazon.tv.legal.notices

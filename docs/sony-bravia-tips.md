@@ -1,10 +1,10 @@
-# Alter Sony Bravia (z. B. KDL-40NX705, Baujahr 2010)
+# Old Sony Bravia TVs (for example KDL-40NX705, built 2010)
 
-Diese Geräte sind keine Android-TVs. Es gibt keine ADB-Schnittstelle und keine Paketbereinigung per Software. Was hilft:
+These sets are not Android TVs. There is no ADB interface and no package cleanup. What actually helps:
 
-- Als reines Display nutzen: Fire TV Stick an HDMI, die TV-eigenen NetTV-/Internet-Apps nicht verwenden.
-- Eco-/Energiespar-Einstellungen aktivieren, Ausschalttimer nutzen, bei reinem Musikhören den Bildschirm ausschalten.
-- HDMI-Steuerung (BRAVIA Sync) nur aktiv lassen, wenn sie gebraucht wird.
-- Netzwerk am TV trennen, wenn der Stick alles streamt.
-- Software-Update prüfen (Einstellungen > Produktunterstützung). Bei Fehlern notfalls Werkseinstellungen.
-- Bei Abstürzen/Hängern: Netzstecker 1 Minute ziehen, Lüftungsschlitze entstauben.
+- Use the TV as a plain display: Fire TV Stick on HDMI, do not use the TV's built-in NetTV / internet apps.
+- Enable eco / energy-saving settings and use the sleep timer; switch the screen off when only listening to music.
+- Keep HDMI control (BRAVIA Sync) enabled only if you need it.
+- Disconnect the TV's own network connection if the stick does all the streaming.
+- Check for a software update (Settings > Product Support). If the TV misbehaves, a factory reset is the last resort.
+- For freezes: unplug the power cord for one minute and remove dust from the ventilation slots.

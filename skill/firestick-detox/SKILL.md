@@ -1,40 +1,43 @@
 ---
 name: firestick-detox
-description: Analysiert und entschlackt einen Amazon Fire TV Stick per ADB (nur pm disable-user, nichts wird gelöscht) mit Never-Liste, Undo-Protokoll und Messung vorher/nachher. Verwenden, wenn ein Fire TV Stick langsam ist, abstürzt, Werbekacheln/Tracking-Dienste hat oder wenn "Fire TV debloat", "Firestick schneller machen", "Fire OS Hintergrunddienste" oder ADB-Aufräumen genannt wird.
+description: Analyse and slim down an Amazon Fire TV Stick over ADB using only pm disable-user (nothing is deleted), with a never-list, an undo log and before/after measurement. Use when a Fire TV Stick is slow or crashing, shows ad tiles or vendor telemetry, or when the user mentions Fire TV debloat, making a Firestick faster, Fire OS background services or cleaning up over ADB.
 ---
 
 # Fire TV Stick Detox (Fire OS, ADB)
 
-Ziel: Einen alten Fire TV Stick (z. B. 1,7 GB RAM) länger nutzbar machen, ohne Alexa, Bluetooth, HDMI-CEC
-oder die Einstellungen zu beschädigen. Alles ist reversibel.
+Goal: keep an old Fire TV Stick (for example 1.7 GB RAM) usable for longer without breaking Alexa voice search, Bluetooth,
+HDMI-CEC or Settings. Everything is reversible.
 
-## Grundregeln (nicht verhandeln)
-1. **Nur deaktivieren**: `pm disable-user --user 0 <paket>`. Niemals `pm uninstall`, `pm clear` oder Werksreset vorschlagen.
-2. **Erst messen, dann ändern.** Vorher-Werte speichern: `/proc/meminfo`, `top`, `dumpsys meminfo`, `pm list packages`, Startzeiten (`am start -W`).
-3. **Risiko vor der ersten Änderung erklären** und bestätigen lassen, dass nur deaktiviert wird.
-4. **Never-Liste** (siehe `lists/never.txt`): SystemUI, Einstellungen, Tastatur, Bluetooth, Alexa/Sprachsuche, HDMI/CEC, Launcher, OTA, Kernsysteme.
-5. **In kleinen Stufen** arbeiten (ca. 10 Pakete), nach jeder Stufe Neustart und Funktionstest (Sprachsuche, Prime, YouTube, Music).
-6. **Jede Änderung protokollieren** mit Undo-Befehl (`pm enable <paket>`).
-7. **Externe Eingriffe nur mit Zustimmung**, z. B. Private DNS (siehe Lessons Learned).
-8. Am Ende: ADB-Debugging und "Apps aus unbekannten Quellen" wieder ausschalten lassen.
+## Non-negotiable rules
+1. **Disable only**: `pm disable-user --user 0 <package>`. Never suggest `pm uninstall`, `pm clear` or a factory reset.
+2. **Measure first, then change.** Save "before" values: `/proc/meminfo`, `top`, `dumpsys meminfo`, `pm list packages`, and app start times (`am start -W`).
+3. **Explain the risk before the first change** and get confirmation that packages are only disabled.
+4. **Never-list** (`lists/never.txt`): System UI, Settings, keyboard, Bluetooth, Alexa/voice search, HDMI/CEC, launcher, OTA, core services.
+5. **Work in small stages** (about 10 packages). Reboot and test after each stage: voice search, and every app the user actually uses.
+6. **Log every change** with its undo command (`pm enable <package>`).
+7. **Ask before external or network-level changes**, for example Private DNS (see below).
+8. At the end tell the user to turn **ADB debugging and "Apps from unknown sources" OFF** again.
+9. Report results honestly. On 1.7 GB devices free RAM at idle barely changes; the gain is often only perceived.
 
-## Ablauf
-1. **Verbinden**: Entwickleroptionen (7x auf Gerätename tippen), ADB-Debugging AN, `adb connect <IP>:5555`, Dialog am TV bestätigen.
-   Hinweis: Fire OS schließt den ADB-Port nach Neustart oder Last oft wieder. Kurz AUS/AN schalten und sofort alle Befehle in einem Rutsch ausführen.
-2. **Analyse** (nur lesen): `scripts/01_analyse.sh <IP>`.
-3. **Kandidaten prüfen**: `lists/disable_stage1.txt` gegen die installierte Paketliste abgleichen. Nutzer-Apps (Netflix, Mediatheken) nur bei Nichtnutzung.
-4. **Anwenden**: `scripts/02_detox.sh <IP> lists/disable_stage1.txt` (Trockenlauf ohne `--apply`).
-5. **Neustart und Test**. Bei Problemen zuerst die zuletzt geänderten Pakete zurückholen, dann `lists/caution.txt` beachten.
-6. **Einstellungen**: Animationen 0 (`window_animation_scale`, `transition_animation_scale`, `animator_duration_scale`), `screen_off_timeout 300000`.
-7. **Nachher messen** und ehrlich berichten. Auf 1,7-GB-Geräten ist der freie RAM im Leerlauf danach kaum anders; der Gewinn ist oft nur gefühlt.
-8. **Protokoll** mit Undo-Liste ausgeben (`scripts/undo.sh`).
+## Procedure
+1. **Connect**: Developer options (click the device name 7 times), ADB debugging ON, `adb connect <IP>:5555`, accept the dialog on the TV.
+   Fire OS often closes the ADB port after reboot or under load. Toggle ADB OFF/ON and run commands in one batch.
+2. **Analyse** (read-only): `scripts/01_analyse.sh <IP> [out_dir]`.
+3. **Check candidates**: compare `lists/disable_stage1.txt` with the installed packages. User-facing apps (Netflix, media libraries) only if unused.
+4. **Apply**: `scripts/02_detox.sh <IP> lists/disable_stage1.txt` (dry run), then add `--apply`.
+5. **Reboot and test.** If something breaks, re-enable the most recently changed packages first, then consult `lists/caution.txt`.
+6. **Settings**: animations to 0 (`window_animation_scale`, `transition_animation_scale`, `animator_duration_scale`), `screen_off_timeout 300000` (5 minutes).
+7. **Measure after** and compare with the saved "before" values.
+8. **Deliver** the change log with undo commands (`scripts/undo.sh` re-enables everything).
 
-## Bekannte Fallen
-- "Cannot disable a protected package": normal bei Fire OS, überspringen und notieren.
-- Fire OS aktiviert manche Pakete nach Neustart selbst wieder.
-- Persistente Pakete lassen sich nicht stabil deaktivieren.
-- Sprachsuche hängt (blauer Balken): zuerst Smarthome-/Device-Control-Pakete und Telemetrie-Gruppe zurückholen.
-- Private DNS im Modus `hostname` (z. B. AdGuard) kann nach Kaltstart die Namensauflösung blockieren. Auf Standard zurück: `settings delete global private_dns_specifier; settings put global private_dns_mode opportunistic`.
-- `ping` vom Stick ist oft blockiert; Erreichbarkeit mit `nc -w 4 <host> 443` testen.
+## Known pitfalls
+- `Cannot disable a protected package` is normal on Fire OS. Skip and note it.
+- Fire OS may re-enable some packages itself after a reboot.
+- PERSISTENT packages cannot be disabled stably.
+- Voice search hangs (blue bar, no answer): first re-enable smarthome/device-control packages, then the telemetry group in `lists/disable_stage1.txt`.
+- Private DNS in `hostname` mode (for example AdGuard) can break name resolution after a cold boot. Test after a cold boot before keeping it. Reset with
+  `settings delete global private_dns_specifier; settings put global private_dns_mode opportunistic`.
+- `ping` from the stick is often blocked; test reachability with `echo | timeout 5 nc -w 4 <host> 443`.
+- If the stick uses Ethernet, `dumpsys wifi` showing "disconnected" is irrelevant.
 
-Mehr Details: `docs/LESSONS_LEARNED.md`.
+More detail: `docs/LESSONS_LEARNED.md`.

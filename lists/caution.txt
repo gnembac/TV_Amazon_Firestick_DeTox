@@ -1,7 +1,7 @@
-# VORSICHT: Diese Pakete NICHT pauschal deaktivieren.
-# Beobachtung auf AFTKRT / Fire OS 8.1.8.5. Ursache nicht sicher belegt, Zusammenhang nur vermutet.
+# CAUTION: do NOT disable these blindly.
+# Observed on AFTKRT / Fire OS 8.1.8.5. The cause is not proven; the link is only suspected.
 
-# Wurden deaktiviert, danach hing die Sprachsuche (blauer Balken ohne Antwort). Nach Reaktivierung wieder OK.
+# Disabled together, then voice search hung (blue bar, no Alexa answer). Re-enabling fixed it.
 com.amazon.tv.devicecontrol
 com.amazon.tv.devicecontrolsettings
 com.amazon.smarthomemapviewapp
@@ -13,15 +13,15 @@ com.amazon.tv.support
 com.amazon.tv.easyupgrade
 com.amazon.firetv.troubleshooting
 
-# Wurde von Fire OS nach Neustart selbst wieder aktiviert:
+# Re-enabled by Fire OS on its own after a reboot:
 com.amazon.tv.matter
 
-# Geschützt ("Cannot disable a protected package"), nicht möglich:
+# Protected ("Cannot disable a protected package"), not possible:
 com.amazon.ftvads.deeplinking
 com.amazon.device.metrics
 com.fireos.usagestats.proxy
 com.amazon.device.logmanager
 com.amazon.tv.csapp
 
-# PERSISTENT (nicht stabil deaktivierbar):
+# PERSISTENT (cannot be disabled stably):
 com.amazon.tv.mattercohost
