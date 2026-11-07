@@ -8,7 +8,7 @@ and measures the result honestly.
 It ships as plain POSIX shell scripts **and** as a reusable [Claude Code](https://claude.com/claude-code) skill.
 
 > Motivation: sustainability. A 1.7 GB RAM stick that became "unusably slow" can be kept in service for years with a few safe changes,
-> without rooting, sideloading launchers or touching the core system.
+> without rooting, sideloading launchers or touching the core system. Stick and TV was optimized before with minimal effekt (RAM improvement, ....)
 
 ---
 
