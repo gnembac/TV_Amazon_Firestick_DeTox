@@ -1,0 +1,42 @@
+# Stufe 1: auf einem AFTKRT (Fire OS 8.1.8.5) stabil deaktiviert, Sprachsuche/Prime/YouTube/Music liefen weiter.
+# Immer erst prüfen, ob das Paket installiert ist. Nutzer-Apps nur bei Nichtnutzung.
+
+# Nutzer-Apps / Mediatheken (nur wenn ungenutzt)
+com.netflix.ninja
+com.zdf.android.mediathek
+de.swr.ard.avp.mobile.android.amazon
+tv.arte.plus7
+com.amazon.spotify.mediabrowserservice
+
+# Werbung / Shopping / Promo
+com.amazon.minitv.android.app
+com.amazon.shoptv.client
+com.amazon.shoptv.firetv.client
+com.amazon.gamehub
+com.amazon.bueller.photos
+com.amazon.tv.website_launcher
+com.amazon.tv.earlyaccess
+com.amazon.tv.releasenotes
+com.amazon.storm.lightning.tutorial
+com.amazon.tmm.tutorial
+
+# Tracking / Telemetrie (Verdachtsgruppe, falls Alexa nach Kaltstart hängt: zuerst diese zurückholen)
+com.amazon.tv.acr
+com.amazon.hybridadidservice
+com.amazon.device.telemetry.emitter
+com.amazon.wirelessmetrics.service
+com.amazon.perfcollection
+com.amazon.perfc
+com.amazon.dp.logger
+com.amazon.neo.minerva.logcat
+
+# Stufe 3: ebenfalls stabil (Werbe-Bildschirmschoner, Rechtliches, leere Platzhalter-Apps)
+com.amazon.ftv.screensaver
+com.amazon.tv.ftvambient
+com.amazon.tv.legal.notices
+com.amazon.dummy.alarmclock
+com.amazon.dummy.calendar
+com.amazon.dummy.contacts
+com.amazon.dummy.gallery
+com.amazon.dummy.music
+com.amazon.dummy.soundpicker
