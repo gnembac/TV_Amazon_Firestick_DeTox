@@ -3,6 +3,7 @@
 # Usage:   sh scripts/02_detox.sh <STICK_IP> <LIST> [--apply]      (without --apply: dry run only)
 # Example: sh scripts/02_detox.sh 192.168.1.50 lists/disable_stage1.txt --apply
 # Always do a dry run first. After applying: reboot and test voice search and every app you use.
+export MSYS_NO_PATHCONV=1   # Git Bash on Windows would rewrite /data into C:/Program Files/Git/data
 set -u
 [ -n "${2:-}" ] || { echo "Usage: sh 02_detox.sh <STICK_IP> <LIST> [--apply]" >&2; exit 1; }
 TV="$1:5555"; LIST="$2"; APPLY="${3:-}"
@@ -14,7 +15,7 @@ LOG="changes_$(date +%Y%m%d_%H%M%S).md"
 
 NEVER=$(grep -vE '^\s*(#|$)' "$NEVERF")
 INSTALLED=$(adb -s "$TV" shell pm list packages | tr -d '\r' | sed 's/package://')
-PERSIST=$(adb -s "$TV" shell 'for p in $(pm list packages | sed s/package://); do dumpsys package $p | grep -m1 pkgFlags | grep -q PERSISTENT && echo $p; done' | tr -d '\r')
+PERSIST=$(adb -s "$TV" shell 'for p in $(pm list packages | sed s/package://); do dumpsys package $p 2>/dev/null | grep -m1 pkgFlags | grep -q PERSISTENT && echo $p; done' | tr -d '\r')
 
 echo "# Changed packages - undo with: adb -s $TV shell pm enable <package>" > "$LOG"
 for p in $(grep -vE '^\s*(#|$)' "$LIST"); do

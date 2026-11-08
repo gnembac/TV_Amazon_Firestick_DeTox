@@ -2,6 +2,7 @@
 # STEP 1: READ ONLY - changes nothing on the Fire TV Stick.
 # Usage: sh scripts/01_analyse.sh <STICK_IP> [OUTPUT_DIR]
 # Prerequisite: Developer options > ADB debugging = ON, authorization dialog accepted on the TV.
+export MSYS_NO_PATHCONV=1   # Git Bash on Windows would rewrite /data into C:/Program Files/Git/data
 set -u
 [ -n "${1:-}" ] || { echo "Usage: sh 01_analyse.sh <STICK_IP> [OUT_DIR]" >&2; exit 1; }
 TV="$1:5555"

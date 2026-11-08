@@ -33,7 +33,9 @@ It ships as plain POSIX shell scripts **and** as a reusable [Claude Code](https:
 ## Results (anonymized, honest)
 
 Test device: **Fire TV Stick (AFTKRT), Fire OS 8.1.8.5 / Android 11, 1.7 GB RAM, ~13 GB storage**, connected via Ethernet.
-Only three apps are used: Prime Video, Amazon Music, YouTube. No personal identifiers are published in this repository.
+Only three apps are used: Prime Video (`com.amazon.firebat`), Amazon Music (`com.amazon.bueller.music`), YouTube (`com.amazon.firetv.youtube`). No personal identifiers are published in this repository.
+
+### Device 1: AFTKRT
 
 | Metric | Before | After |
 |---|---|---|
@@ -54,6 +56,22 @@ Only three apps are used: Prime Video, Amazon Music, YouTube. No personal identi
 - I did not record start-up times *before* the changes, so there is no measured before/after for responsiveness.
   **Measure start times first** (see below) if you want proof.
 
+### Device 2: AFTSS ("sheldon", Fire TV Stick HD class), Fire OS 7.7.1.7 / Android 9, 0.9 GB RAM, ~5 GB storage
+
+Used with a 4K OLED TV. Apps used: Prime Video, Amazon Music, YouTube, VLC.
+
+| Metric | Before | After |
+|---|---|---|
+| Free RAM at idle (`MemAvailable`) | ~237 MB | ~202-209 MB |
+| Packages disabled (never removed) | 1 | 25 (24 new: stage A 17 + stage B 7) |
+| Animations (window/transition/animator) | 1.0 / 1.0 / unset | 0 / 0 / 0 |
+| YouTube cold start (`am start -W`, ms) | 786-1087 | 990-1559 (measured 3-8 min after a cold boot) |
+| Prime Video / Amazon Music cold start (ms) | not measured | 1066-1112 / 891-1104 |
+
+Honest reading: **no measurable speed or RAM gain** on this very small device; the benefit is fewer ad tiles and less telemetry.
+Alexa voice search, music playback and starting Prime Video/YouTube by voice all worked afterwards.
+List: `lists/disable_aftss_fireos7.txt`.
+
 ## Repository layout
 
 | Path | Purpose |
@@ -61,12 +79,15 @@ Only three apps are used: Prime Video, Amazon Music, YouTube. No personal identi
 | `skill/firestick-detox/SKILL.md` | Claude Code skill: rules and procedure |
 | `scripts/01_analyse.sh` | Read-only analysis (RAM, services, network, packages, settings) |
 | `scripts/02_detox.sh` | Dry-run or apply a package list, never-list protection, undo log |
+| `scripts/03_verify.sh` | Read-only: are the disabled packages still disabled after a reboot? Times your apps, counts crashes |
 | `scripts/undo.sh` | Re-enable everything, reset animations and private DNS |
 | `lists/never.txt` | Packages that are never touched (substring match) |
 | `lists/disable_stage1.txt` | Packages that were stable to disable on the test device |
+| `lists/disable_aftss_fireos7.txt` | Verified list for AFTSS / Fire OS 7.7.1.7 (two stages) |
 | `lists/caution.txt` | Packages that caused trouble, were protected or were re-enabled by Fire OS |
 | `docs/LESSONS_LEARNED.md` | Detailed field report including failures |
 | `docs/sony-bravia-tips.md` | Tips for old non-Android TVs |
+| `docs/lg-oled-tips.md` | Tips for a modern webOS OLED TV with a stick on HDMI |
 
 ## Requirements
 
@@ -91,6 +112,8 @@ sh scripts/02_detox.sh 192.168.1.50 lists/disable_stage1.txt
 sh scripts/02_detox.sh 192.168.1.50 lists/disable_stage1.txt --apply
 
 # 4. Reboot the stick, then test: voice search (hold the remote's mic button), Prime Video, Music, YouTube.
+#    Then verify the packages are still disabled and time your apps (wait 5-8 min after a cold boot):
+sh scripts/03_verify.sh 192.168.1.50 lists/disable_stage1.txt com.amazon.firetv.youtube/dev.cobalt.app.MainActivity
 
 # 5. Roll back everything if anything misbehaves:
 sh scripts/undo.sh 192.168.1.50
@@ -181,7 +204,7 @@ See `docs/sony-bravia-tips.md` for what actually helps (use the TV as a plain di
 
 ## Disclaimer
 
-Use at your own risk. The lists were tested on **one device model and firmware (AFTKRT, Fire OS 8.1.8.5)**; other models and versions may behave differently.
+Use at your own risk. The lists were tested on **two device models (AFTKRT Fire OS 8.1.8.5, AFTSS Fire OS 7.7.1.7)**; other models and versions may behave differently.
 Disabling system packages can affect features. Every step here is reversible with `pm enable`, but no warranty is given.
 Not affiliated with Amazon. "Fire TV", "Alexa" and "Prime Video" are trademarks of their owners.
 

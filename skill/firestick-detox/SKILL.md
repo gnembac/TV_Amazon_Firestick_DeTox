@@ -5,7 +5,7 @@ description: Analyse and slim down an Amazon Fire TV Stick over ADB using only p
 
 # Fire TV Stick Detox (Fire OS, ADB)
 
-Goal: keep an old Fire TV Stick (for example 1.7 GB RAM) usable for longer without breaking Alexa voice search, Bluetooth,
+Goal: keep an old Fire TV Stick (for example 0.9-1.7 GB RAM) usable for longer without breaking Alexa voice search, Bluetooth,
 HDMI-CEC or Settings. Everything is reversible.
 
 ## Non-negotiable rules
@@ -29,6 +29,18 @@ HDMI-CEC or Settings. Everything is reversible.
 6. **Settings**: animations to 0 (`window_animation_scale`, `transition_animation_scale`, `animator_duration_scale`), `screen_off_timeout 300000` (5 minutes).
 7. **Measure after** and compare with the saved "before" values.
 8. **Deliver** the change log with undo commands (`scripts/undo.sh` re-enables everything).
+
+## Checks added after the second device (AFTSS, Fire OS 7.7.1.7)
+- **Identify the target first** (`ro.product.model`, `ro.serialno`, `ro.build.display.id`, storage) and compare with what the user said:
+  people often own several sticks. If `adb` says `unauthorized`, ask the user to accept "Always allow" on the TV.
+- **Look up the real package names** before claiming an app is missing: Prime Video = `com.amazon.firebat`,
+  Amazon Music = `com.amazon.bueller.music`, YouTube = `com.amazon.firetv.youtube` (all on the never-list).
+- **Two stages** (A: ads/promo/dummy, B: telemetry), reboot after each, then run
+  `scripts/03_verify.sh <IP> <list> <pkg/activity>`. Disabled packages can silently be enabled again after the first reboot.
+- **Measure comparably**: same conditions (cold boot + 5-8 min) before and after, start times via `am start -W`.
+- Verified lists: `lists/disable_stage1.txt` (AFTKRT, Fire OS 8.1.8.5) and `lists/disable_aftss_fireos7.txt` (AFTSS, Fire OS 7.7.1.7).
+- On Windows Git Bash scripts need `MSYS_NO_PATHCONV=1` (already set).
+- Modern webOS/Android TVs: no ADB cleanup, see `docs/lg-oled-tips.md`; old Sony: `docs/sony-bravia-tips.md`.
 
 ## Known pitfalls
 - `Cannot disable a protected package` is normal on Fire OS. Skip and note it.

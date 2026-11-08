@@ -34,3 +34,35 @@ An honest field report from one real run. Results apply to this device and may d
 ## Honest limits
 - Old Sony Bravia TVs (for example a 2010 KDL-40NX705) do not run Android: no ADB, no package cleanup. See `sony-bravia-tips.md`.
 - You cannot create more RAM. Regular restarts and enough free storage help more than disabling additional packages.
+
+---
+
+# Second run: AFTSS, Fire OS 7.7.1.7 / Android 9, 0.9 GB RAM (used with a 4K OLED TV)
+
+## Outcome
+- 24 packages disabled in two stages (A: ads/promo/dummy 17, B: tracking/telemetry 7), nothing deleted; animations 0/0/0.
+- Alexa voice search, music playback and starting Prime Video/YouTube by voice worked after both stages.
+- **No measurable gain.** Free RAM ~237 MB before, ~202-209 MB after; YouTube cold start 786-1087 ms before, 990-1559 ms after
+  (the first "after" run was only minutes after a cold boot and is not comparable). The list from the first device carried over
+  almost 1:1, so the lists are portable across Fire OS 7 and 8 on these sticks.
+
+## New lessons
+1. **Know the real package names before concluding an app is missing.** I searched for `avod` and `music` and wrongly reported
+   Prime Video and Amazon Music as not installed. They are `com.amazon.firebat` (Prime Video) and `com.amazon.bueller.music`
+   (Amazon Music). Both are on the never-list. Use `pm list packages | grep -iE 'firebat|bueller|youtube'` and check the launcher with
+   `cmd package resolve-activity --brief -c android.intent.category.LEANBACK_LAUNCHER <pkg>`.
+2. **Disabled packages can be silently back after the first reboot.** After stage B and a reboot all 7 packages were enabled again
+   (the count of `pm list packages -d` was unchanged). Re-applying and rebooting again kept them disabled. Cause unproven
+   (Fire OS re-enable, or the change not persisted before the reboot). Always verify after the reboot (`scripts/03_verify.sh`)
+   and wait a minute before rebooting after `pm disable-user`.
+3. **Measure under comparable conditions.** "Before" was a warm, long-running system; "after" started minutes after a cold boot
+   and looked slower. Compare like with like (cold boot + 5-8 min settle time both times), otherwise you measure the reboot.
+4. **Several sticks in one household.** Identify the target (`ro.product.model`, `ro.serialno`, `ro.build.display.id`) before
+   changing anything and compare it with what the owner told you.
+5. **Windows Git Bash rewrites `/data` into `C:/Program Files/Git/data`** in adb arguments (`df: 'C:/Program': No such file`).
+   Fixed with `export MSYS_NO_PATHCONV=1` in the scripts.
+6. **`dumpsys package` prints "Failed to write while dumping service package: Broken pipe"** when piped into `grep -m1`.
+   Harmless; stderr is now silenced inside the persistent-package check.
+7. **`device unauthorized`** means the TV waits for "Always allow". Only the user can accept it on the TV.
+8. A 0.9 GB stick has no headroom: the launcher (~115 MB), `system_server` (~75 MB), `surfaceflinger` (~60 MB) and the Alexa
+   services dominate. Expect cosmetic benefits only.

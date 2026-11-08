@@ -1,0 +1,31 @@
+# Verified list for AFTSS ("sheldon", Fire TV Stick HD class), Fire OS 7.7.1.7 / Android 9, 0.9 GB RAM.
+# 24 packages disabled, stable over two reboots. Voice search (Alexa), Prime Video, Amazon Music and YouTube kept working.
+# Apply in two stages and reboot between them (A = ads/promo/dummy, B = tracking/telemetry).
+
+# Stage A
+com.amazon.spotify.mediabrowserservice
+com.amazon.minitv.android.app
+com.amazon.shoptv.client
+com.amazon.shoptv.firetv.client
+com.amazon.gamehub
+com.amazon.bueller.photos
+com.amazon.tv.website_launcher
+com.amazon.tv.releasenotes
+com.amazon.storm.lightning.tutorial
+com.amazon.tmm.tutorial
+com.amazon.ftv.screensaver
+com.amazon.tv.legal.notices
+com.amazon.dummy.alarmclock
+com.amazon.dummy.calendar
+com.amazon.dummy.contacts
+com.amazon.dummy.gallery
+com.amazon.dummy.music
+
+# Stage B (tracking / telemetry)
+com.amazon.tv.acr
+com.amazon.hybridadidservice
+com.amazon.wirelessmetrics.service
+com.amazon.perfcollection
+com.amazon.perfc
+com.amazon.dp.logger
+com.amazon.neo.minerva.logcat
